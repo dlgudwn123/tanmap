@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            font-size: 500%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            transition: 200ms;
+            filter: drop-shadow(0px 0px 50px black);
+            transform-origin: 50% -50%;
+            transform: rotateY(90deg);
+        }
+        div::selection {
+            font-size: 500%;
+        }
+        body{
+            overflow: hidden;
+            background-color: black;
+            filter: invert(100%);
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+    <script>
+        var arr = [];
+        let x = 2;
+        let map = '';
+        let shaking = 0;
+        let setShake;
+        let isStart = false;
+        let nowWidth = 0;
+        let nowhei = 0;
+        const div = document.querySelector("div");
+        const body = document.querySelector("body");
+        const bullet = () => {
+            nowhei = 10;
+            for (var i = 0; i < arr.length; i++) {
+                arr[i] = `${arr[i].slice(0, arr[i].indexOf(', ') + 2)}${Number(arr[i].slice(arr[i].indexOf(', ') + 2)) + 1}`;
+                if (Number(arr[i].slice(arr[i].indexOf(', ') + 2)) > 5) {
+                    arr.splice(i, 1);
+                    i--;
+                }
+            }
+            console.log(arr.length);
+            madeBul();
+            rander();
+        }
+        const madeBul = () => {
+            let num = Math.floor(Math.random() * 5);
+            arr.push(`${num}, 0`);
+        }
+        const shake = () => {
+            shaking++;
+            setShake = 10 - shaking;
+            if (shaking > 10) {
+                shaking = 0;
+                div.style.minHeight = '100vh';
+                div.style.width = `100%`;
+                div.style.filter = 'drop-shadow(0px 0px 25px black) blur(0px)';
+                body.style.filter = 'invert(100%)';
+                div.style.color = 'black';
+                // body.style.backgroundColor = 'black';
+            }
+            else {
+                div.style.filter = `drop-shadow(0px 0px 25px red) blur(${setShake}px)`;
+                body.style.filter = `invert(0%)`;
+                div.style.color = 'gray';
+                // body.style.backgroundColor = 'white';
+                div.style.minHeight = `${100 + Math.floor(Math.random() * setShake * 2 + 1 - setShake * 2)}vh`;
+                div.style.width = `${100 + Math.floor(Math.random() * setShake * 2 + 1 - setShake * 2)}%`;
+                setTimeout(shake, 30);
+            }
+        }
+        const rander = () => {
+            map = '';
+            for (var i = 0; i < 5; i++) {
+                for (var j = 0; j < 5; j++) {
+                    if (i === 4 && j === x) {
+                        map += '■';
+                        if (arr.includes(`${j}, ${i}`)) {
+                            shake();
+                        }
+                    }
+                    else {
+                        if (arr.includes(`${j}, ${i}`)) {
+                            map += '▣';
+                        }
+                        else {
+                            map += '□';
+                        }
+                    }
+                }
+                map += '<br>';
+            }
+            div.innerHTML = map;
+        }
+        window.onkeydown = (evt) => {
+            if (!isStart)
+            {
+                isStart = true;
+                start();
+            }
+            else {
+                if (evt.key === "a") {
+                    x -= 1;
+                    nowWidth = -10;
+                }
+                if (evt.key === "d") {
+                    x += 1;
+                    nowWidth = 10;
+                }
+                if (x < 0) {
+                    x = 0;
+                    nowWidth = 0;
+                }
+                if (x > 4) {
+                    x = 4;
+                    nowWidth = 0;
+                }
+                rander();
+            }
+        }
+        window.onmousedown = e => {
+            e.preventDefault();
+            if (!isStart)
+            {
+                isStart = true;
+                start();
+            }
+            if (e.clientX < window.innerWidth / 2)
+            {
+                x -= 1;
+                nowWidth = -10;
+                if (x < 0) {
+                    x = 0;
+                    nowWidth = 0;
+                }
+            }
+            else
+            {
+                x += 1;
+                nowWidth = 10;
+                if (x > 4) {
+                    x = 4;
+                    nowWidth = 0;
+                }
+            }
+            rander();
+        }
+        document.body.oncontextmenu = e => {
+            e.preventDefault();					/* 오른쪽 클릭 메뉴 버튼 막음 */
+        };
+        document.body.onmouseup = e => {
+            e.preventDefault();					/* 인터넷 뒤로가기, 앞으로 가기 막음 */
+    	    result.innerHTML = '마우스 안 눌림';
+        };
+        const Update = () => {
+            nowWidth += (0 - nowWidth) / 5;
+            nowhei += (0 - nowhei) / 5;
+            div.style.transform = `translate(${nowWidth * -1}px, ${nowhei}px) rotate(${nowWidth * -0.3}deg`;
+        }
+        // setInterval(함수, 밀리초)
+        rander();
+        let start = () => {
+            div.style.transform = `rotateY(0deg)`;
+            div.style.transition = '100ms';
+            setInterval(bullet, 300);
+            setInterval(Update, 50);
+        }
+    </script>
+</body>
+</html>
