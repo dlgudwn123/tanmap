@@ -119,12 +119,12 @@
                     nowWidth = 10;
                 }
                 if (x < 0) {
-                    x = 0;
-                    nowWidth = 0;
+                    x = 4;
+                    // nowWidth = 0;
                 }
                 if (x > 4) {
-                    x = 4;
-                    nowWidth = 0;
+                    x = 0;
+                    // nowWidth = 0;
                 }
                 rander();
             }
@@ -141,8 +141,8 @@
                 x -= 1;
                 nowWidth = -10;
                 if (x < 0) {
-                    x = 0;
-                    nowWidth = 0;
+                    x = 4;
+                    // nowWidth = 0;
                 }
             }
             else
@@ -150,8 +150,8 @@
                 x += 1;
                 nowWidth = 10;
                 if (x > 4) {
-                    x = 4;
-                    nowWidth = 0;
+                    x = 0;
+                    // nowWidth = 0;
                 }
             }
             rander();
